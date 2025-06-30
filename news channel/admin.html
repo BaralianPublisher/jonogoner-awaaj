@@ -1,1 +1,40 @@
-<!DOCTYPE html><html><head><title>Admin</title></head><body><h2>নিউজ আপলোড ফর্ম</h2></body></html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel - Jonogoner Awaaj</title>
+</head>
+<body>
+  <h1>📰 নিউজ আপলোড ফর্ম</h1>
+
+  <form id="newsForm">
+    <input type="text" id="title" placeholder="নিউজ শিরোনাম দিন" required><br><br>
+    <input type="text" id="image" placeholder="ছবির লিংক দিন (URL)" required><br><br>
+    <textarea id="description" placeholder="নিউজ বিস্তারিত লিখুন..." required></textarea><br><br>
+    <button type="submit">📝 আপলোড করুন</button>
+  </form>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script>
+    document.getElementById("newsForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const title = document.getElementById("title").value;
+      const image = document.getElementById("image").value;
+      const description = document.getElementById("description").value;
+
+      firebase.database().ref("news").push({
+        title,
+        image,
+        description,
+        time: Date.now()
+      });
+
+      alert("✅ নিউজ সফলভাবে আপলোড হয়েছে!");
+      this.reset();
+    });
+  </script>
+</body>
+</html>
