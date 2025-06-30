@@ -1,40 +1,71 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin Panel - Jonogoner Awaaj</title>
-</head>
-<body>
-  <h1>📰 নিউজ আপলোড ফর্ম</h1>
-
-  <form id="newsForm">
-    <input type="text" id="title" placeholder="নিউজ শিরোনাম দিন" required><br><br>
-    <input type="text" id="image" placeholder="ছবির লিংক দিন (URL)" required><br><br>
-    <textarea id="description" placeholder="নিউজ বিস্তারিত লিখুন..." required></textarea><br><br>
-    <button type="submit">📝 আপলোড করুন</button>
-  </form>
-
+  <meta charset="UTF-8">
+  <title>নিউজ আপলোড</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <script src="js/firebase-config.js"></script>
-  <script>
-    document.getElementById("newsForm").addEventListener("submit", function (e) {
-      e.preventDefault();
+  <style>
+    body { font-family: kalpurush, sans-serif; padding: 30px; background: #f2f2f2; }
+    h1 { color: #111; }
+    input, textarea {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+      max-width: 500px;
+      font-size: 16px;
+    }
+    button {
+      background: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>📰 নিউজ আপলোড ফর্ম</h1>
+  <input type="text" id="title" placeholder="নিউজ শিরোনাম দিন">
+  <input type="text" id="image" placeholder="ছবির লিংক (URL)">
+  <textarea id="description" placeholder="নিউজ বিস্তারিত লিখুন..." rows="6"></textarea>
+  <button onclick="uploadNews()">📝 আপলোড করুন</button>
 
+  <script>
+    function uploadNews() {
       const title = document.getElementById("title").value;
       const image = document.getElementById("image").value;
       const description = document.getElementById("description").value;
 
-      firebase.database().ref("news").push({
-        title,
-        image,
-        description,
-        time: Date.now()
-      });
+      if (title === "" || image === "" || description === "") {
+        alert("সব ফিল্ড পূরণ করুন!");
+        return;
+      }
 
-      alert("✅ নিউজ সফলভাবে আপলোড হয়েছে!");
-      this.reset();
-    });
+      const newsRef = firebase.database().ref("news");
+      const newPost = {
+        title: title,
+        image: image,
+        description: description,
+        time: new Date().toISOString()
+      };
+
+      newsRef.push(newPost)
+        .then(() => {
+          alert("✅ নিউজ সফলভাবে আপলোড হয়েছে!");
+          document.getElementById("title").value = "";
+          document.getElementById("image").value = "";
+          document.getElementById("description").value = "";
+        })
+        .catch((error) => {
+          alert("❌ কিছু ভুল হয়েছে: " + error.message);
+        });
+    }
   </script>
 </body>
 </html>
