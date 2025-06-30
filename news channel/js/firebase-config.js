@@ -1,0 +1,1 @@
+const firebaseConfig = { /* your config */ }; firebase.initializeApp(firebaseConfig);
